@@ -1,5 +1,5 @@
 from django.conf import settings
-from minio import Minio
+from minio import Minio, S3Error
 from minio.datatypes import Bucket
 from logsapi.models.buckets import BucketModel
 
@@ -17,3 +17,10 @@ class MinioStorage:
             bucket_m = [BucketModel(name=b.name).model_dump() for b in buckets]
             return bucket_m
         return []
+
+    def create_bucket(self, bucket: BucketModel) -> (bool, str):
+        try:
+            self.client.make_bucket(bucket.name)
+            return True, "created"
+        except S3Error as e:
+            return False, e.message
