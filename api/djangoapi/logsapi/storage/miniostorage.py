@@ -2,7 +2,7 @@ from django.conf import settings
 from minio import Minio, S3Error
 from minio.datatypes import Bucket
 from logsapi.models.buckets import BucketModel
-
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class MinioStorage:
     def __init__(self):
@@ -36,3 +36,16 @@ class MinioStorage:
             self.client.remove_bucket(bucket.name)
             return True
         return False
+    
+    def upload_file(self, f: InMemoryUploadedFile, bucket: str):
+        # chunk_size = 1024 * 1024 # 1MB
+        part_size = 5 * 1024 * 1024 #5MB
+        find_bucket = self.client.bucket_exists(bucket)
+        if find_bucket:
+            self.client.put_object(bucket_name=bucket, object_name=f.name, data=f, length=f.size, part_size=part_size) 
+            return True
+        return False  
+    
+    # def __read_chunks(self, f, chunk_size):
+    #     while(chunk := f.read(chunk_size)):
+    #         yield chunk

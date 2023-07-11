@@ -7,5 +7,5 @@ register_converter(Pathstrconverter, "bucketname")
 urlpatterns = [
     path("buckets", buckets.Buckets.as_view(), name="buckets"),
     path("buckets/<bucketname:name>", bucketfiles.BucketFiles.as_view(), name="bucket_files"),
-    path("files", files.Files.as_view(), name="files")
+    path("files/<bucketname:name>", files.Files.as_view(), name="files")
 ]
