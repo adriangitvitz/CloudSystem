@@ -1,3 +1,5 @@
-Pipfile.lock
 .env
 config.yml
+.vscode
+.idea
+Pipfile.lock
