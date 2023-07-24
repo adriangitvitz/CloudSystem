@@ -95,6 +95,7 @@ func (c Consumer) Consume(s *storage.Storage) {
 			if err != nil {
 				log.Fatalf("Error removing file: %s", err.Error())
 			}
+            //TODO: Send message of done or error to ws
 		}
 	}
 }
