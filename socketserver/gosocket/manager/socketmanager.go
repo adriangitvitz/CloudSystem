@@ -27,7 +27,7 @@ var channels = make(map[string]*Channel)
 
 var (
 	// How long to await a pong response from client
-	pongWait = 10 * time.Second
+	pongWait = 40 * time.Second
 	// Interval has to be less than the await time - We multiply by 0.9 to get 90% of time
 	// The reason why it has to be less than PingRequency is becuase otherwise it will send a new Ping before getting response
 	pingInterval = (pongWait * 9) / 10
@@ -109,13 +109,13 @@ func handleConnection(connection *Connection, c *Channel) {
 	}
 	// Configure how to handle Pong responses
 	connection.WS.SetPongHandler(connection.pongHandler)
-     go func() {
-        for msg := range connection.Send {
-            if err := connection.WS.WriteMessage(websocket.TextMessage, msg); err != nil {
-                return
-            }
-        }
-    }()
+	go func() {
+		for msg := range connection.Send {
+			if err := connection.WS.WriteMessage(websocket.TextMessage, msg); err != nil {
+				return
+			}
+		}
+	}()
 	for {
 		_, message, err := connection.WS.ReadMessage()
 		if err != nil {

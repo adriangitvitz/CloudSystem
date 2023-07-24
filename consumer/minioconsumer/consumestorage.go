@@ -6,6 +6,7 @@ import (
 	"log"
 	"minioconsumer/models"
 	"minioconsumer/repositories"
+	"minioconsumer/socketclient"
 	"minioconsumer/storage"
 	"os"
 	"strings"
@@ -85,7 +86,7 @@ func (c Consumer) Consume(s *storage.Storage) {
 			res := repositories.POSTGRES.Where(&models.Upload{Tag: v.Bucketinfo.Object.Metadata.Metauuid, Type: "logs", Processed: false}).First(&upload)
 			if !errors.Is(res.Error, gorm.ErrRecordNotFound) {
 				s.Getlog(upload.Bucket, v.Bucketinfo.Object.Key, fname, chars, es)
-                repositories.POSTGRES.Where(&models.Upload{Tag: v.Bucketinfo.Object.Metadata.Metauuid}).Updates(&models.Upload{Processed: true})
+				repositories.POSTGRES.Where(&models.Upload{Tag: v.Bucketinfo.Object.Metadata.Metauuid}).Updates(&models.Upload{Processed: true})
 			}
 			err := os.Remove(fname)
 			if err != nil {
@@ -95,7 +96,8 @@ func (c Consumer) Consume(s *storage.Storage) {
 			if err != nil {
 				log.Fatalf("Error removing file: %s", err.Error())
 			}
-            //TODO: Send message of done or error to ws
+			//TODO: Send message of done or error to ws
+			socketclient.Sendmessage("processed")
 		}
 	}
 }

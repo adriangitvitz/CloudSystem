@@ -20,7 +20,7 @@ def on_open(ws):
 if __name__ == "__main__":
     websocket.enableTrace(True)
     ws = websocket.WebSocketApp(
-        "ws://localhost:8080/ws?chan=test",
+        "ws://localhost:8080/ws?chan=jobs",
         on_message=on_message,
         on_error=on_error,
         on_close=on_close,
