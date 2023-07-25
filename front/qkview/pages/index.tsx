@@ -1,4 +1,4 @@
-import {Box, Container, Typography, useMediaQuery} from "@mui/material";
+import {Box, Chip, Container, Typography, useMediaQuery} from "@mui/material";
 import UploadForm from "./components/UploadForm/UploadForm";
 import {DataGrid} from "@mui/x-data-grid";
 import useSWRSubscription from "swr/subscription";
@@ -12,22 +12,58 @@ export default function Home() {
         {
             field: "id",
             headerName: "ID",
-            flex: 1
+            flex: 1,
         },
         {
             field: "bucket",
             headerName: "Bucket",
-            flex: 1
+            flex: 1,
+            renderCell: (params: any) => {
+                return(
+                    <Typography variant="h5">
+                        {params.row.bucket}
+                    </Typography>
+                )
+            }
         },
         {
             field: "filename",
             headerName: "File Name",
-            flex: 1
+            flex: 1,
+            renderCell: (params: any) => {
+                return(
+                   <Typography variant="h5">
+                       {params.row.filename}
+                   </Typography>
+                )
+            }
+        },
+        {
+            field: "processed",
+            headerName: "Status",
+            flex: 1,
+            renderCell: (params: any) => {
+                return(
+                    <Chip label={params.row.processed ? "Processed": "Not Processed"} variant="outlined" sx={{
+                        backgroundColor: "secondary.400",
+                        color: "secondary.50",
+                        fontWeight: "bold"
+                    }}/>
+                )
+            }
         },
         {
             field: "size",
             headerName: "Size",
-            flex: 1
+            flex: 1,
+            renderCell: (params: any) => {
+                const mb = params.row.size / (1024 * 1024);
+                return (
+                    <Typography variant="h5">
+                        {parseFloat(mb.toFixed(2))} MB
+                    </Typography>
+                )
+            }
         }
     ]
 
@@ -77,6 +113,13 @@ export default function Home() {
                         columns={columns}
                         rows={tabledata}
                         getRowId={(row: any) => row.id}
+                        initialState={{
+                            columns: {
+                                columnVisibilityModel: {
+                                    id: false
+                                }
+                            }
+                        }}
                     />
                 </Box>
             </Box>
