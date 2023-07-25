@@ -22,7 +22,11 @@ type Channel struct {
 	Broadcast   chan []byte
 }
 
-var upgrader = websocket.Upgrader{}
+var upgrader = websocket.Upgrader{
+    CheckOrigin: func(r *http.Request) bool {
+        return true // Allow any origin
+    },
+}
 var channels = make(map[string]*Channel)
 
 var (
@@ -100,15 +104,15 @@ func handleConnection(connection *Connection, c *Channel) {
 		connection.WS.Close()
 	}()
 	// Message Max Size in Bytes
-	connection.WS.SetReadLimit(1024)
+	// connection.WS.SetReadLimit(1024)
 	// Configuring wait time for Pong response
 	// Has to be done to set the first initial timer
-	if err := connection.WS.SetReadDeadline(time.Now().Add(pongWait)); err != nil {
-		log.Fatal(err)
-		return
-	}
+	// if err := connection.WS.SetReadDeadline(time.Now().Add(pongWait)); err != nil {
+	// 	log.Fatal(err)
+	// 	return
+	// }
 	// Configure how to handle Pong responses
-	connection.WS.SetPongHandler(connection.pongHandler)
+	// connection.WS.SetPongHandler(connection.pongHandler)
 	go func() {
 		for msg := range connection.Send {
 			if err := connection.WS.WriteMessage(websocket.TextMessage, msg); err != nil {

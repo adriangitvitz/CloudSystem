@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model uploads {
+  id         BigInt   @id
+  bucket     String   @db.VarChar(255)
+  filename   String   @db.VarChar(255)
+  size       BigInt
+  processed  Boolean
+  type       String   @db.VarChar(255)
+  uploadtime DateTime @db.Timestamptz(6)
+  uuidtag    String   @db.VarChar(255)
+}

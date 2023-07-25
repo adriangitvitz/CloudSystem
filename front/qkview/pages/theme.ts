@@ -53,6 +53,19 @@ export const colortokens = () => ({
         800: '#212121',
         900: '#000000'
     },
+    warning: {
+        DEFAULT: "#FFC107",
+        50: "#FFFDE7",
+        100: "#FFF9C4",
+        200: "#FFF59D",
+        300: "#FFF176",
+        400: "#FFEE58",
+        500: "#FFC107",
+        600: "#FFB300",
+        700: "#FFA000",
+        800: "#FF8F00",
+        900: "#FF6F00",
+    }
 });
 
 
@@ -77,6 +90,10 @@ export const themesettings = () => {
             background: {
                 ...colors.background,
                 default: colors.background[500]
+            },
+            warning: {
+                ...colors.warning,
+                main: colors.warning.DEFAULT
             }
         },
         typography: {

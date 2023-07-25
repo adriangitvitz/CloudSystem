@@ -88,6 +88,7 @@ func (c Consumer) Consume(s *storage.Storage) {
 				s.Getlog(upload.Bucket, v.Bucketinfo.Object.Key, fname, chars, es)
 				repositories.POSTGRES.Where(&models.Upload{Tag: v.Bucketinfo.Object.Metadata.Metauuid}).Updates(&models.Upload{Processed: true})
 			}
+            log.Println("Removing files...")
 			err := os.Remove(fname)
 			if err != nil {
 				log.Fatalf("Error removing file: %s", err.Error())
@@ -96,8 +97,9 @@ func (c Consumer) Consume(s *storage.Storage) {
 			if err != nil {
 				log.Fatalf("Error removing file: %s", err.Error())
 			}
-			//TODO: Send message of done or error to ws
+            log.Println("Sending message")
 			socketclient.Sendmessage("processed")
+            log.Println("Message Sent")
 		}
 	}
 }
