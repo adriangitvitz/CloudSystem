@@ -230,5 +230,5 @@ func (q QKviewparser) readlogs(chars map[byte]bool, es *elasticsearch.Client) {
 
 func (q QKviewparser) Read(chars map[byte]bool, es *elasticsearch.Client) {
 	q.extract()
-	// q.readlogs(chars, es)
+	q.readlogs(chars, es)
 }
